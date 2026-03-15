@@ -1,20 +1,11 @@
-﻿using ExCSS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XchyUI.animation;
+﻿using XchyUI.Components;
 using XchyUI.GLFW.window;
-using XchyUI.models;
 using XchyUI.navigation;
-using XchyUI.theme;
-using XchyUI.utils;
-using XchyUI.views;
 using XchyUI.widgets;
 using XchyUI.widgets.extensions;
-using XchyUIDemo.res;
 using static XchyUI.widgets.XWidget;
+using static XchyUI.Components.Compoments;
+using System.Diagnostics;
 
 namespace XchyUIDemo
 {
@@ -34,6 +25,27 @@ namespace XchyUIDemo
             {
                 Column(() =>
                 {
+                    var visiblePopover = StateValueOf(false);
+                    var dateTime = DateTime.Now;
+                    var dateTimeState = StateValueOf(dateTime);
+                    Input().PrimaryInput().Width(300)
+                    .Binding(dateTimeState, (builder, date) =>
+                    {
+                        builder.TextValue(date.ToString());
+                    }, needLayout: true)
+                    .Popover(visiblePopover, () =>
+                    {
+                        var stopWatch = new Stopwatch();
+                        stopWatch.Start();
+                        DateTimePicker(dateTimeState.Value, date =>
+                        {
+                            Console.WriteLine(date);
+                            dateTimeState.Value = date;
+                            visiblePopover.Value = false;
+                        }).Margin(10);
+                        stopWatch.Stop();
+                        Console.WriteLine("show....." + stopWatch.ElapsedMilliseconds);
+                    });
                     // 响应式状态
                     var counterNum = StateValueOf(0);
                     Text()
@@ -43,21 +55,10 @@ namespace XchyUIDemo
                            builder.TextValue($"一个简单的计数器：{num}");
                        }, needLayout: true); //改变文本需要重新布局，默认为false
 
-                    // 无Timer循环动画
-                    var visibleState = StateValueOf(true);
-                    var animateValue = AnimateFloatOf(visibleState, animate =>
-                    {
-                        animate.Duration = 800;
-                        animate.Times = int.MaxValue;
-                        animate.Delay = 200;
-                        animate.Interpolator = XAnimationInterpolator.Uniform;
-                    });
 
-                    Icon(SvgResources.CircleProgress)
-                       .Size(32)
-                       .Binding(animateValue, (builder, value) =>
-                           builder.Rotate(value * 360)
-                       );
+                    Icon(SvgRes.Loading)
+                        .Color(xTheme.Colors.PrimaryText)
+                        .Size(32).CircleProgress();
                     // 点击交互
                     Text("点击增加计数")
                        .PrimaryButton()
@@ -65,26 +66,16 @@ namespace XchyUIDemo
                        {
                            counterNum.Value++;
                        });
-                    var numState = StateValueOf(0);
-                    Column(numState, num =>
-                    {
 
-                        for (int i = num; i < 4; i++)
-                        {
-                            Text("测试热重载:" + i);
-                        }
-                    })
-                    .Size(WRAP)
-                    .Space(10);
-
-                    Text("测试")
-                    .PrimaryButton()
+                    var loadingState = StateValueOf(false);
+                    IconButton(SvgRes.Search, "Search",loadingState: loadingState)
                     .Click(() =>
                     {
-                        numState.Value++;
+                        loadingState.Value = !loadingState.Value;
                     });
                 })
                  .Size(WRAP)
+                 .Padding(10)
                  .Space(10);
             }).View;
             OpenPage(page);

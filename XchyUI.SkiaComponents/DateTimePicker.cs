@@ -1,0 +1,288 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using XchyUI.expansions;
+using XchyUI.models;
+using XchyUI.widgets;
+using XchyUI.widgets.extensions;
+using static XchyUI.models.XFunctions;
+using static XchyUI.widgets.XWidget;
+
+namespace XchyUI.Components
+{
+    public  static partial class Compoments
+    {
+        public static XViewBuilder DateTimePicker(DateTime dateTime, XFunction<DateTime> onSelected, DateTime? startTime = null, DateTime? endTime = null, int cellHeight = 50)
+        {
+            startTime = startTime ?? new DateTime(1900, 1, 1);
+            endTime = endTime ?? new DateTime(3000, 12, 31);
+            var typeState = StateValueOf(0); // 0 选择天，1选择年，2选择月
+            var currentDateTimeState = StateValueOf(dateTime);
+            var selectedDateTimeState = StateValueOf(dateTime);
+            var startYearState = StateValueOf(0);
+            currentDateTimeState.Join(startYearState);
+            string[] months = { "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月" };
+
+            void DateTitleBar()
+            {
+                Row(() =>
+                {
+                    Icon(SvgRes.DArrowLeft).Size(20)
+                    .Margin(vertical: 10).Hand()
+                    .Click(() =>
+                    {
+                        if(typeState.Value == 1)
+                        {
+                            startYearState.Value -= 10;
+                        }
+                        else
+                        {
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddYears(-1);
+                        }
+                       
+                    }, defaultEffect: false);
+
+                    // 选择天的时候
+                    if (typeState.Value == 0)
+                    {
+                        Icon(SvgRes.ArrowLeft).Size(20).Hand().Click(() =>
+                        {
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddMonths(-1);
+                        }, defaultEffect: false);
+                    }
+
+                    Row(() =>
+                    {
+                        // 年分
+                        Text().H3().Hand()
+                        .Binding(currentDateTimeState, (builder, date) =>
+                        {
+                            var year = date.Year.ToString();
+                            if (typeState.Value == 1)
+                            {
+                                year = $"{startYearState.Value}-{startYearState.Value + 9}";
+                            }
+                            builder.TextValue(year);
+
+                        }, needLayout: true)
+                        .Click(() =>
+                        {
+                            var year = currentDateTimeState.Value.Year;
+                            startYearState.Value = year - year % 10;
+                            typeState.Value = 1;
+                        }, defaultEffect: false);
+
+                        // 选择天的时候
+                        if (typeState.Value == 0)
+                        {
+                            // 月份
+                            Text().H3().Hand()
+                            .Binding(currentDateTimeState, (builder, date) =>
+                            {
+                                builder.TextValue(months[date.Month - 1]);
+                            }, needLayout: true)
+                            .Click(() =>
+                            {
+                                typeState.Value = 2;
+                            }, defaultEffect: false);
+                        }
+                    }).Weight(1).Space(20).HorizontalAlignment(XHorizontalAlignment.Center);
+
+                    // 选择天的时候
+                    if (typeState.Value == 0)
+                    {
+                        Icon(SvgRes.ArrowRight).Size(20).Hand().Click(() =>
+                        {
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddMonths(1);
+                        }, defaultEffect: false);
+                    }
+
+                    Icon(SvgRes.DArrowRight).Size(20).Hand().Click(() =>
+                    {
+                        if (typeState.Value == 1)
+                        {
+                            startYearState.Value += 10;
+                        }
+                        else
+                        {
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddYears(1);
+                        }
+                    }, defaultEffect: false);
+
+                }).Size(FILL, WRAP).Space(10).ClipContent(false).Padding(horizontal: 10);
+            }
+
+            void WeekBar()
+            {
+                string[] weeks = { "日", "一", "二", "三", "四", "五", "六" };
+                Space(10);
+                Row(() =>
+                {
+                    for (int i = 0; i < weeks.Length; i++)
+                    {
+                        Text(weeks[i]).Height(cellHeight).TextAlignment(XAlignment.Center);
+                    }
+                }).Width(FILL).HorizontalAlignment(XHorizontalAlignment.Bisect);
+            }
+
+            void SetHoverStyle(XViewBuilder builder, bool isCurrent)
+            {
+                var background = isCurrent ? xTheme.Colors.Primary : XColors.Transparent;
+                var color = isCurrent ? xTheme.Colors.White : xTheme.Colors.PrimaryText;
+                var hoverColor = isCurrent ? xTheme.Colors.White :
+                xTheme.Colors.Primary;
+                builder.Background(background)
+                   .FontColor(color)
+                   .HoverColor(hoverColor);
+            }
+
+            void SelectYearPanel()
+            {
+                Space(20);
+                Flow(startYearState, startYear =>
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var year = startYear + i;
+                        Text($"{year}")
+                        .Height(cellHeight)
+                        .TextAlignment(XAlignment.Center)
+                        .Radius(cellHeight/2)
+                        .Hand()
+                        .Click(() =>
+                        {
+                            var num = year - currentDateTimeState.Value.Year;
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddYears(num);
+                            typeState.Value = 2;
+                        }, defaultEffect: false)
+                        .Also(builder=>
+                        {
+                            SetHoverStyle(builder, year == currentDateTimeState.Value.Year);
+                        });
+                    }
+                }).Size(FILL, WRAP).Cells(4).Space(20);
+            }
+
+            void SelectMonthPanel()
+            {
+                Space(20);
+                Flow(currentDateTimeState, dateTime =>
+                {
+                    for (int i = 0; i < 12; i++)
+                    {
+                        var mouth = i + 1;
+                        Text($"{months[i]}")
+                        .Height(cellHeight)
+                        .TextAlignment(XAlignment.Center)
+                        .Radius(cellHeight / 2)
+                        .Hand()
+                        .Click(() =>
+                        {
+                            var num = mouth - currentDateTimeState.Value.Month;
+                            currentDateTimeState.Value = currentDateTimeState.Value.AddMonths(num);
+                            typeState.Value = 0;
+                        }, defaultEffect: false)
+                        .Also(builder =>
+                        {
+                            SetHoverStyle(builder, currentDateTimeState.Value.Year == DateTime.Now.Year &&  mouth == currentDateTimeState.Value.Month);
+                        });
+                    }
+                }).Size(FILL, WRAP).Cells(4).Space(20);
+            }
+
+            // 选择天
+            void SelectDayPanel()
+            {
+
+                Flow(currentDateTimeState, currentMouth =>
+                {
+                    DateTime firstDayOfMonth = new DateTime(currentMouth.Year, currentMouth.Month, 1);
+                    int dayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+                    if (dayOfWeek == 0)
+                    {
+                        dayOfWeek = 7;
+                    }
+                    DateTime startDate = firstDayOfMonth.AddDays(-dayOfWeek);
+
+                    for (int row = 0; row < 6; row++)
+                    {
+                        for (int col = 0; col < 7; col++)
+                        {
+                            DateTime day = startDate.AddDays(row * 7 + col);
+                            bool isCurrentMonth = day.Year == currentMouth.Year && day.Month == currentMouth.Month;
+                            bool isToday = day.Date == DateTime.Today;
+                            var textColor = xTheme.Colors.PrimaryText;
+                            if (isToday)
+                            {
+                                textColor = xTheme.Colors.Primary;
+                            }
+                            else if (!isCurrentMonth)
+                            {
+                                textColor = xTheme.Colors.DarkBorder;
+                            }
+                            var isOutDate = day < startTime || day > endTime;
+                            Box(() =>
+                            {
+                                Text(day.Day.ToString())
+                                .Size(cellHeight - 10)
+                                .FontWeight(isToday ? xTheme.Weights.Large : xTheme.Weights.Middle)
+                                .FontColor(textColor)
+                                .TextAlignment(XAlignment.Center)
+                                .Circle()
+                                .HoverCursor(XCursorType.Hand)
+                                .Click(() =>
+                                {
+                                    currentDateTimeState.Value = day;
+                                    selectedDateTimeState.Value = day;
+                                    if (isCurrentMonth)
+                                    {
+                                        onSelected?.Invoke(day);
+                                    }
+                                })
+                                .Binding(selectedDateTimeState, (builder, date) =>
+                                {
+                                    if (date.Year == day.Year && date.Month == day.Month && date.Day == day.Day)
+                                    {
+                                        builder
+                                        .Background(xTheme.Colors.Primary)
+                                        .FontColor(xTheme.Colors.White)
+                                        .HoverColor(xTheme.Colors.White);
+                                    }
+                                    else
+                                    {
+                                        builder
+                                       .Background(xTheme.Colors.Transparent)
+                                       .FontColor(textColor)
+                                       .HoverColor(xTheme.Colors.Primary);
+                                    }
+                                    builder.EnableEvent(!isOutDate).Alpha(isOutDate ? xTheme.Colors.DisabledAlpha : 1);
+                                });
+                            }).Size(WRAP).Height(cellHeight);
+                        }
+                    }
+                }).Size(FILL, WRAP).Cells(7);
+
+            }
+            return Column(typeState, type =>
+            {
+                Space(10);
+                DateTitleBar();
+
+                if (type == 0)
+                {
+                    WeekBar();
+                    Space(1).Width(FILL).Background(xTheme.Colors.BaseBorder);
+                    SelectDayPanel();
+                }
+                else if (type == 1)
+                {
+                    SelectYearPanel();
+                }
+                else
+                {
+                    SelectMonthPanel();
+                }
+            }).Size(400, WRAP);
+        }
+    }
+}

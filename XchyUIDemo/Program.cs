@@ -1,8 +1,8 @@
-﻿using XchyUI.GLFW.window;
+﻿using XchyUI.Components;
+using XchyUI.GLFW.window;
 using XchyUI.SkiaSharp;
 using XchyUI.utils;
 using XchyUIDemo;
-using XchyUIDemo.res;
 
 HotkeyManager.Start();
 WindowManager.Get().Init();
@@ -11,6 +11,6 @@ window.RenderBackend = new SkiaRenderBackend();
 WindowManager.Get().SetMainWindow(window);
 XTask.Run(() =>
 {
-    SvgResources.Load();
+    SvgRes.Load();
 });
 WindowManager.Get().Start();

@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\XchyUI.SkiaComponents\XchyUI.Components.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="XchyUI">
       <HintPath>libs\XchyUI.dll</HintPath>
     </Reference>

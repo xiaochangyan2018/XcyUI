@@ -309,6 +309,16 @@
             "rid": "win-x86"
           }
         }
+      },
+      "XchyUI.Components/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/XchyUI.Components.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/XchyUI.Components.dll": {}
+        }
       }
     }
   },
@@ -884,13 +894,19 @@
         "ultz.native.glfw.3.4.0.nupkg.sha512",
         "ultz.native.glfw.nuspec"
       ]
+    },
+    "XchyUI.Components/1.0.0": {
+      "type": "project",
+      "path": "../XchyUI.SkiaComponents/XchyUI.Components.csproj",
+      "msbuildProject": "../XchyUI.SkiaComponents/XchyUI.Components.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Silk.NET.GLFW >= 2.22.0",
       "SkiaSharp >= 3.119.1",
-      "Svg.Skia >= 3.2.1"
+      "Svg.Skia >= 3.2.1",
+      "XchyUI.Components >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -924,7 +940,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\code\\demo\\XchyUIDemo\\XchyUI.SkiaComponents\\XchyUI.Components.csproj": {
+              "projectPath": "C:\\code\\demo\\XchyUIDemo\\XchyUI.SkiaComponents\\XchyUI.Components.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
