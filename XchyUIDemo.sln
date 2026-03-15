@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XchyUIDemo", "XchyUIDemo\Xc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XchyUIDemo.SharpShap2x", "XchyUIDemo.SharpShap2x\XchyUIDemo.SharpShap2x.csproj", "{C36ABFFF-D639-40EE-8E3F-8B0D904111EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XchyUI.Components", "XchyUI.SkiaComponents\XchyUI.Components.csproj", "{92DA4B27-D9D4-91DA-849B-A0AD938DCA77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XchyUI.Components", "XchyUI.Components\XchyUI.Components.csproj", "{5E2CE16F-E657-2154-60E2-E22273862BD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{C36ABFFF-D639-40EE-8E3F-8B0D904111EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C36ABFFF-D639-40EE-8E3F-8B0D904111EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C36ABFFF-D639-40EE-8E3F-8B0D904111EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{92DA4B27-D9D4-91DA-849B-A0AD938DCA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92DA4B27-D9D4-91DA-849B-A0AD938DCA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92DA4B27-D9D4-91DA-849B-A0AD938DCA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92DA4B27-D9D4-91DA-849B-A0AD938DCA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E2CE16F-E657-2154-60E2-E22273862BD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E2CE16F-E657-2154-60E2-E22273862BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E2CE16F-E657-2154-60E2-E22273862BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E2CE16F-E657-2154-60E2-E22273862BD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

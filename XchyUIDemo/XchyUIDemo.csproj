@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XchyUI.SkiaComponents\XchyUI.Components.csproj" />
+    <ProjectReference Include="..\XchyUI.Components\XchyUI.Components.csproj" />
   </ItemGroup>
 
   <ItemGroup>

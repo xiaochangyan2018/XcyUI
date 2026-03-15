@@ -897,8 +897,8 @@
     },
     "XchyUI.Components/1.0.0": {
       "type": "project",
-      "path": "../XchyUI.SkiaComponents/XchyUI.Components.csproj",
-      "msbuildProject": "../XchyUI.SkiaComponents/XchyUI.Components.csproj"
+      "path": "../XchyUI.Components/XchyUI.Components.csproj",
+      "msbuildProject": "../XchyUI.Components/XchyUI.Components.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -941,8 +941,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\code\\demo\\XchyUIDemo\\XchyUI.SkiaComponents\\XchyUI.Components.csproj": {
-              "projectPath": "C:\\code\\demo\\XchyUIDemo\\XchyUI.SkiaComponents\\XchyUI.Components.csproj"
+            "C:\\code\\demo\\XchyUIDemo\\XchyUI.Components\\XchyUI.Components.csproj": {
+              "projectPath": "C:\\code\\demo\\XchyUIDemo\\XchyUI.Components\\XchyUI.Components.csproj"
             }
           }
         }
