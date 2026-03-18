@@ -6,6 +6,7 @@ using XchyUI.widgets.extensions;
 using static XchyUI.widgets.XWidget;
 using static XchyUI.Components.Compoments;
 using System.Diagnostics;
+using XchyUI.theme;
 
 namespace XchyUIDemo
 {
@@ -73,6 +74,8 @@ namespace XchyUIDemo
                     {
                         loadingState.Value = !loadingState.Value;
                     });
+
+                    Text("切换黑夜白天").PrimaryButton().Click(() => xTheme.ApplyTheme(!XTheme.DarkModeState.Value));
                 })
                  .Size(WRAP)
                  .Padding(10)
