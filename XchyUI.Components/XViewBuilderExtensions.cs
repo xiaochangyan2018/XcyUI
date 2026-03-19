@@ -84,7 +84,10 @@ namespace XchyUI.Components
                 // 计算
                 var rect = view.RenderRect;
                 var visibleState = StateValueOf(true);
-                var animateValue = AnimateFloatOf(visibleState);
+                var animateValue = AnimateFloatOf(visibleState, animate =>
+                {
+                    animate.Duration = 180;
+                });
                 PopoverCard(() =>
                 {
                     content.Invoke();
@@ -100,7 +103,7 @@ namespace XchyUI.Components
                         PopoverUtils.ArrowDirection.Right => rect.LeftCenter,
                         _ => rect.BottomCenter
                     };
-                    builder.Scale(value, point);
+                    builder.Scale(value, point).Alpha(value);
                 }); ;
             },
             disableOutClick:false,
