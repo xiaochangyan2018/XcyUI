@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using XchyUI.expansions;
+﻿using XchyUI.expansions;
 using XchyUI.models;
 using XchyUI.widgets;
 using XchyUI.widgets.extensions;
@@ -10,7 +7,7 @@ using static XchyUI.widgets.XWidget;
 
 namespace XchyUI.Components
 {
-    public  static partial class Compoments
+    public static partial class Compoments
     {
         public static XViewBuilder DateTimePicker(DateTime dateTime, XFunction<DateTime> onSelected, DateTime? startTime = null, DateTime? endTime = null, int cellHeight = 50)
         {
@@ -31,7 +28,7 @@ namespace XchyUI.Components
                     .Margin(vertical: 10).Hand()
                     .Click(() =>
                     {
-                        if(typeState.Value == 1)
+                        if (typeState.Value == 1)
                         {
                             startYearState.Value -= 10;
                         }
@@ -39,7 +36,7 @@ namespace XchyUI.Components
                         {
                             currentDateTimeState.Value = currentDateTimeState.Value.AddYears(-1);
                         }
-                       
+
                     }, defaultEffect: false);
 
                     // 选择天的时候
@@ -64,7 +61,7 @@ namespace XchyUI.Components
                             }
                             builder.TextValue(year);
 
-                        }, needLayout: true)
+                        }, needParentLayout: true)
                         .Click(() =>
                         {
                             var year = currentDateTimeState.Value.Year;
@@ -80,7 +77,7 @@ namespace XchyUI.Components
                             .Binding(currentDateTimeState, (builder, date) =>
                             {
                                 builder.TextValue(months[date.Month - 1]);
-                            }, needLayout: true)
+                            }, needParentLayout: true)
                             .Click(() =>
                             {
                                 typeState.Value = 2;
@@ -147,7 +144,7 @@ namespace XchyUI.Components
                         Text($"{year}")
                         .Height(cellHeight)
                         .TextAlignment(XAlignment.Center)
-                        .Radius(cellHeight/2)
+                        .Radius(cellHeight / 2)
                         .Hand()
                         .Click(() =>
                         {
@@ -155,7 +152,7 @@ namespace XchyUI.Components
                             currentDateTimeState.Value = currentDateTimeState.Value.AddYears(num);
                             typeState.Value = 2;
                         }, defaultEffect: false)
-                        .Also(builder=>
+                        .Also(builder =>
                         {
                             SetHoverStyle(builder, year == currentDateTimeState.Value.Year);
                         });
@@ -184,7 +181,7 @@ namespace XchyUI.Components
                         }, defaultEffect: false)
                         .Also(builder =>
                         {
-                            SetHoverStyle(builder, currentDateTimeState.Value.Year == DateTime.Now.Year &&  mouth == currentDateTimeState.Value.Month);
+                            SetHoverStyle(builder, currentDateTimeState.Value.Year == DateTime.Now.Year && mouth == currentDateTimeState.Value.Month);
                         });
                     }
                 }).Size(FILL, WRAP).Cells(4).Space(20);
@@ -239,9 +236,10 @@ namespace XchyUI.Components
                                         onSelected?.Invoke(day);
                                     }
                                 })
-                                .Binding(selectedDateTimeState, (builder, date) =>
+                                .Also(builder =>
                                 {
-                                    if (date.Year == day.Year && date.Month == day.Month && date.Day == day.Day)
+                                    var selectDate = selectedDateTimeState.Value;
+                                    if (selectDate == day)
                                     {
                                         builder
                                         .Background(xTheme.Colors.Primary)
@@ -282,7 +280,7 @@ namespace XchyUI.Components
                 {
                     SelectMonthPanel();
                 }
-            }).Size(400, WRAP);
+            }, needParentLayout: true).Size(400, WRAP);
         }
     }
 }

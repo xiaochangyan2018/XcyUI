@@ -39,7 +39,7 @@ namespace XchyUI.Components
                         marginX = selectedState.Value ? value * dist : (1 - value) * dist;
                     }
                     builder.Margin(left: (int)marginX);
-                }, needLayout: true)
+                }, needParentLayout: true)
                 .Binding(selectedState, (builder, isSelected) =>
                 {
                     var backgroundColor = isSelected ? xTheme.Light.BlankFill : xTheme.Light.BlankFill;
@@ -495,6 +495,103 @@ namespace XchyUI.Components
                     }, true);
                 }).Width(FILL).ClipContent(false);
             }).Size(WRAP).Padding(6).ClipPadding(false);
+        }
+
+        /// <summary>
+        /// slider滑道
+        /// </summary>
+        /// <param name="value">进度值0-1</param>
+        /// <param name="onValueChanged">值变化时候回调</param>
+        /// <param name="width">组件宽度</param>
+        /// <param name="trackSize">滑道高度</param>
+        /// <param name="thumbSize">滑块大小</param>
+        public static void Silder(float value, XFunction<float>? onValueChanged = null, int width = 500, int trackSize = 10, int thumbSize = 28)
+        {
+            var trackWidth = value * (width - thumbSize);
+            Box(() =>
+            {
+                var valueState = StateValueOf(value);
+                var isDragValue = false;
+                Space(trackSize).Width(FILL).Radius(trackSize / 2).Background(xTheme.Colors.BaseBorder)
+                .HoverCursor(XCursorType.Hand)
+                .Click((builder, info) =>
+                {
+                    var left = info.X - builder.View.Parent.X;
+                    var trackWidth = left.AsDp();
+                    value = (float)trackWidth / (width - thumbSize);
+                    value = Math.Max(0, value);
+                    value = Math.Min(1, value);
+                    isDragValue = false;
+                    valueState.Value = value;
+                    onValueChanged?.Invoke(valueState.Value);
+                }, defaultEffect: false);
+
+                Space(trackSize)
+                .Binding(valueState, (builder, value) =>
+                {
+                    var trackWidth = (width - thumbSize) * value;
+                    builder.Width((int)trackWidth);
+                }, needLayout: true)
+                .Width((int)trackWidth)
+                .Radius(trackSize / 2)
+                .Background(xTheme.Colors.Primary);
+
+                // 悬浮动画
+                var visibleState = StateValueOf(false);
+                var animateValue = AnimateFloatOf(visibleState);
+                var isMaxScale = StateValueOf(false);
+
+                // 滑块手柄
+                Space(thumbSize).Background(xTheme.Colors.White)
+                .Border(xTheme.Colors.Primary, 2)
+                .Margin(left: (int)(trackWidth - thumbSize / 2))
+                .Binding(valueState, (builder, progress) =>
+                {
+                    if (!isDragValue)
+                    {
+                        var left = (width - thumbSize) * progress;
+                        builder.View.X = builder.View.Parent.X + (int)left.AsPx();
+                    }
+                })
+                .Drag(XDragType.Horizontal, (builder, info) =>
+                {
+                    var left = builder.View.X - builder.View.Parent.X;
+                    var trackWidth = left.AsDp();
+                    builder.Margin(left: trackWidth - thumbSize / 2);
+                    value = (float)trackWidth / (width - thumbSize);
+                    isDragValue = true;
+                    valueState.Value = value;
+                    onValueChanged?.Invoke(valueState.Value);
+                })
+                .ToggleHover(isHover =>
+                {
+                    isMaxScale.Value = !isHover;
+                    visibleState.Send(true);
+                })
+                .HoverCursor(XCursorType.Arrow)
+                .Binding(animateValue, (builder, value) =>
+                {
+                    if (visibleState.Value)
+                    {
+                        var maxScale = 1.2f;
+                        var start = 1f;
+                        var end = maxScale;
+                        if (isMaxScale.Value)
+                        {
+                            start = maxScale;
+                            end = 1f;
+                        }
+                        var currentValue = start + (end - start) * value;
+                        builder.Scale(currentValue);
+                    }
+                })
+                .Circle();
+            })
+            .Size(width, WRAP)
+            .ContentAlignment(XAlignment.LeftCenter)
+            .Padding(horizontal: thumbSize / 2)
+            .ClipContent(false);
+
         }
     }
 }
