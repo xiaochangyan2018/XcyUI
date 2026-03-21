@@ -6,8 +6,6 @@ using XchyUI.utils;
 using XchyUIDemo;
 
 HotkeyManager.Start();
-// windows 虚拟机字体加这个
-XThemeManager.Theme.DefaultFontName = "Microsoft YaHei";
 WindowManager.Get().Init();
 var window = new MainWindow();
 window.RenderBackend = new SkiaRenderBackend();
