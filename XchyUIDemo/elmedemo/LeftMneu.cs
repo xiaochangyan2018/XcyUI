@@ -61,10 +61,9 @@ namespace XchyUI.Demo.elmedemo
                         "DialogForm 对话框表单,0",
                         "图表,1",
                         "LineChart 折线图,0",
-                        "PieChart 饼图,0",
                         "BarChart 柱形图,0",
-                        "GaugeChart 仪表盘,0",
                         "Scatter  散点图,0",
+                        "PieChart 饼图,0"
                     };
                 var menus = new List<MenuItem>();
                 foreach (var item in datas)

@@ -1,5 +1,6 @@
 ﻿using XchyUI.Demo.elmedemo.description;
 using XchyUI.widgets;
+using XchyUIDemo.elmedemo.description;
 
 namespace XchyUI.Demo.elmedemo
 {
@@ -19,6 +20,7 @@ namespace XchyUI.Demo.elmedemo
                 _infos.AddRange(TreeGridDescription.GetInfos());
                 _infos.AddRange(DataGridDescription.GetInfos());
                 _infos.AddRange(PopoverDescription.GetInfos());
+                _infos.AddRange(ChartDescription.GetInfos());
             }
             return _infos;
         }
